@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tycoon Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            padding-top: 50px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .status {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .upgrade {
+            background-color: #008CBA;
+        }
+        .upgrade:hover {
+            background-color: #007b8e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tycoon Game</h1>
+        <div class="status">
+            <p>Money: $<span id="money">0</span></p>
+            <p>Business Level: <span id="businessLevel">1</span></p>
+            <p>Money per Click: $<span id="earningsPerClick">1</span></p>
+        </div>
+        <button class="button" id="clickButton">Earn Money</button>
+        <button class="button upgrade" id="upgradeButton">Upgrade Business - $50</button>
+    </div>
+
+    <script>
+        let money = 0;
+        let earningsPerClick = 1;
+        let businessLevel = 1;
+        const moneyDisplay = document.getElementById("money");
+        const earningsPerClickDisplay = document.getElementById("earningsPerClick");
+        const businessLevelDisplay = document.getElementById("businessLevel");
+
+        // Click Button Event
+        document.getElementById("clickButton").onclick = function() {
+            money += earningsPerClick;
+            moneyDisplay.textContent = money;
+        };
+
+        // Upgrade Button Event
+        document.getElementById("upgradeButton").onclick = function() {
+            if (money >= 50) {
+                money -= 50;
+                earningsPerClick += 1;
+                businessLevel += 1;
+                moneyDisplay.textContent = money;
+                earningsPerClickDisplay.textContent = earningsPerClick;
+                businessLevelDisplay.textContent = businessLevel;
+            } else {
+                alert("You need $50 to upgrade your business!");
+            }
+        };
+    </script>
+</body>
+</html>
