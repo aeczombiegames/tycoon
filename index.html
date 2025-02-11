@@ -44,6 +44,12 @@
         .rebirth:hover {
             background-color: #e67e22;
         }
+        .gamble {
+            background-color: #e74c3c;
+        }
+        .gamble:hover {
+            background-color: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -54,10 +60,12 @@
             <p>Business Level: <span id="businessLevel">1</span></p>
             <p>Money per Click: $<span id="earningsPerClick">1</span></p>
             <p>Rebirths: <span id="rebirths">0</span></p>
+            <p>Next Rebirth Cost: $<span id="rebirthCost">1000</span></p>
         </div>
         <button class="button" id="clickButton">Earn Money</button>
         <button class="button upgrade" id="upgradeButton">Upgrade Business - $50</button>
-        <button class="button rebirth" id="rebirthButton">Rebirth - $1000</button>
+        <button class="button rebirth" id="rebirthButton">Rebirth</button>
+        <button class="button gamble" id="gambleButton">Gamble</button>
     </div>
 
     <script>
@@ -71,12 +79,18 @@
         const earningsPerClickDisplay = document.getElementById("earningsPerClick");
         const businessLevelDisplay = document.getElementById("businessLevel");
         const rebirthsDisplay = document.getElementById("rebirths");
+        const rebirthCostDisplay = document.getElementById("rebirthCost");
 
         // Update the displayed values
         moneyDisplay.textContent = money;
         earningsPerClickDisplay.textContent = earningsPerClick;
         businessLevelDisplay.textContent = businessLevel;
         rebirthsDisplay.textContent = rebirths;
+
+        // Calculate the next rebirth cost
+        function calculateRebirthCost() {
+            return 1000 * Math.pow(3, rebirths); // Increase cost exponentially: 1000, 3000, 9000, etc.
+        }
 
         // Save data to localStorage
         function saveData() {
@@ -110,26 +124,53 @@
 
         // Rebirth Button Event
         document.getElementById("rebirthButton").onclick = function() {
-            if (money >= 1000) {
+            const rebirthCost = calculateRebirthCost();
+            if (money >= rebirthCost) {
                 money = 0;
-                earningsPerClick = 1;
+                earningsPerClick = 3 + (rebirths * 3); // Increase earnings per click after rebirth (e.g., +3 per rebirth)
                 businessLevel = 1;
                 rebirths += 1;
 
-                // Apply bonus after rebirth
-                earningsPerClick += 2; // Example: increase earnings per click after rebirth
-
+                // Update the UI
                 moneyDisplay.textContent = money;
                 earningsPerClickDisplay.textContent = earningsPerClick;
                 businessLevelDisplay.textContent = businessLevel;
                 rebirthsDisplay.textContent = rebirths;
+                rebirthCostDisplay.textContent = calculateRebirthCost();
 
                 alert(`Rebirth successful! You now have ${earningsPerClick} money per click!`);
                 saveData();  // Save to localStorage after rebirth
             } else {
-                alert("You need $1000 to rebirth!");
+                alert("You don't have enough money to rebirth!");
             }
         };
+
+        // Gambling Feature
+        document.getElementById("gambleButton").onclick = function() {
+            let gambleAmount = prompt("How much do you want to gamble?");
+
+            gambleAmount = parseInt(gambleAmount);
+            if (isNaN(gambleAmount) || gambleAmount <= 0 || gambleAmount > money) {
+                alert("Invalid gamble amount. You must have enough money to gamble!");
+                return;
+            }
+
+            let gambleOutcome = Math.random() < 0.5; // 50% chance to win
+            if (gambleOutcome) {
+                let winnings = gambleAmount * 2; // Win double the amount gambled
+                money += winnings;
+                alert(`You won! You now have $${winnings} more.`);
+            } else {
+                money -= gambleAmount;
+                alert(`You lost! You lost $${gambleAmount}.`);
+            }
+
+            moneyDisplay.textContent = money;
+            saveData();  // Save to localStorage after gambling
+        };
+
+        // Initialize rebirth cost display
+        rebirthCostDisplay.textContent = calculateRebirthCost();
     </script>
 </body>
 </html>
