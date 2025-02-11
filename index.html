@@ -38,6 +38,12 @@
         .upgrade:hover {
             background-color: #007b8e;
         }
+        .rebirth {
+            background-color: #f39c12;
+        }
+        .rebirth:hover {
+            background-color: #e67e22;
+        }
     </style>
 </head>
 <body>
@@ -47,23 +53,44 @@
             <p>Money: $<span id="money">0</span></p>
             <p>Business Level: <span id="businessLevel">1</span></p>
             <p>Money per Click: $<span id="earningsPerClick">1</span></p>
+            <p>Rebirths: <span id="rebirths">0</span></p>
         </div>
         <button class="button" id="clickButton">Earn Money</button>
         <button class="button upgrade" id="upgradeButton">Upgrade Business - $50</button>
+        <button class="button rebirth" id="rebirthButton">Rebirth - $1000</button>
     </div>
 
     <script>
-        let money = 0;
-        let earningsPerClick = 1;
-        let businessLevel = 1;
+        // Load data from localStorage or set default values
+        let money = parseInt(localStorage.getItem("money")) || 0;
+        let earningsPerClick = parseInt(localStorage.getItem("earningsPerClick")) || 1;
+        let businessLevel = parseInt(localStorage.getItem("businessLevel")) || 1;
+        let rebirths = parseInt(localStorage.getItem("rebirths")) || 0;
+
         const moneyDisplay = document.getElementById("money");
         const earningsPerClickDisplay = document.getElementById("earningsPerClick");
         const businessLevelDisplay = document.getElementById("businessLevel");
+        const rebirthsDisplay = document.getElementById("rebirths");
+
+        // Update the displayed values
+        moneyDisplay.textContent = money;
+        earningsPerClickDisplay.textContent = earningsPerClick;
+        businessLevelDisplay.textContent = businessLevel;
+        rebirthsDisplay.textContent = rebirths;
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem("money", money);
+            localStorage.setItem("earningsPerClick", earningsPerClick);
+            localStorage.setItem("businessLevel", businessLevel);
+            localStorage.setItem("rebirths", rebirths);
+        }
 
         // Click Button Event
         document.getElementById("clickButton").onclick = function() {
             money += earningsPerClick;
             moneyDisplay.textContent = money;
+            saveData();  // Save to localStorage after each click
         };
 
         // Upgrade Button Event
@@ -75,8 +102,32 @@
                 moneyDisplay.textContent = money;
                 earningsPerClickDisplay.textContent = earningsPerClick;
                 businessLevelDisplay.textContent = businessLevel;
+                saveData();  // Save to localStorage after upgrading
             } else {
                 alert("You need $50 to upgrade your business!");
+            }
+        };
+
+        // Rebirth Button Event
+        document.getElementById("rebirthButton").onclick = function() {
+            if (money >= 1000) {
+                money = 0;
+                earningsPerClick = 1;
+                businessLevel = 1;
+                rebirths += 1;
+
+                // Apply bonus after rebirth
+                earningsPerClick += 2; // Example: increase earnings per click after rebirth
+
+                moneyDisplay.textContent = money;
+                earningsPerClickDisplay.textContent = earningsPerClick;
+                businessLevelDisplay.textContent = businessLevel;
+                rebirthsDisplay.textContent = rebirths;
+
+                alert(`Rebirth successful! You now have ${earningsPerClick} money per click!`);
+                saveData();  // Save to localStorage after rebirth
+            } else {
+                alert("You need $1000 to rebirth!");
             }
         };
     </script>
