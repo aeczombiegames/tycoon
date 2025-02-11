@@ -50,6 +50,48 @@
         .gamble:hover {
             background-color: #c0392b;
         }
+        
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -66,6 +108,14 @@
         <button class="button upgrade" id="upgradeButton">Upgrade Business - $50</button>
         <button class="button rebirth" id="rebirthButton">Rebirth</button>
         <button class="button gamble" id="gambleButton">Gamble</button>
+    </div>
+
+    <!-- Modal for Pop-up notifications -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <p id="notificationMessage"></p>
+        </div>
     </div>
 
     <script>
@@ -92,12 +142,18 @@
             return 1000 * Math.pow(3, rebirths); // Increase cost exponentially: 1000, 3000, 9000, etc.
         }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem("money", money);
-            localStorage.setItem("earningsPerClick", earningsPerClick);
-            localStorage.setItem("businessLevel", businessLevel);
-            localStorage.setItem("rebirths", rebirths);
+        // Show a custom notification in the modal
+        function showNotification(message) {
+            const modal = document.getElementById("notificationModal");
+            const notificationMessage = document.getElementById("notificationMessage");
+            notificationMessage.textContent = message;
+            modal.style.display = "block";
+        }
+
+        // Close the modal
+        document.getElementById("closeModal").onclick = function() {
+            const modal = document.getElementById("notificationModal");
+            modal.style.display = "none";
         }
 
         // Click Button Event
@@ -118,7 +174,7 @@
                 businessLevelDisplay.textContent = businessLevel;
                 saveData();  // Save to localStorage after upgrading
             } else {
-                alert("You need $50 to upgrade your business!");
+                showNotification("You need $50 to upgrade your business!");
             }
         };
 
@@ -138,10 +194,10 @@
                 rebirthsDisplay.textContent = rebirths;
                 rebirthCostDisplay.textContent = calculateRebirthCost();
 
-                alert(`Rebirth successful! You now have ${earningsPerClick} money per click!`);
+                showNotification(`Rebirth successful! You now have ${earningsPerClick} money per click!`);
                 saveData();  // Save to localStorage after rebirth
             } else {
-                alert("You don't have enough money to rebirth!");
+                showNotification("You don't have enough money to rebirth!");
             }
         };
 
@@ -151,7 +207,7 @@
 
             gambleAmount = parseInt(gambleAmount);
             if (isNaN(gambleAmount) || gambleAmount <= 0 || gambleAmount > money) {
-                alert("Invalid gamble amount. You must have enough money to gamble!");
+                showNotification("Invalid gamble amount. You must have enough money to gamble!");
                 return;
             }
 
@@ -159,10 +215,10 @@
             if (gambleOutcome) {
                 let winnings = gambleAmount * 2; // Win double the amount gambled
                 money += winnings;
-                alert(`You won! You now have $${winnings} more.`);
+                showNotification(`You won! You now have $${winnings} more.`);
             } else {
                 money -= gambleAmount;
-                alert(`You lost! You lost $${gambleAmount}.`);
+                showNotification(`You lost! You lost $${gambleAmount}.`);
             }
 
             moneyDisplay.textContent = money;
