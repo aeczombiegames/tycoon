@@ -248,11 +248,12 @@
                 return;
             }
 
-            let ultimateGambleOutcome = Math.random() < 0.01; // 1% chance to win 100 times the gamble amount
+            let ultimateGambleOutcome = Math.random() < 0.001; // 0.1% chance to win 100 times the gamble amount
             if (ultimateGambleOutcome) {
-                let winnings = gambleAmount * 100; // Win 100 times the amount gambled
+                let winnings = gambleAmount * 1000; // Win 1000 times the amount gambled
                 money += winnings;
-                showNotification(`Ultimate Win! You now have $${winnings} more.`);
+                showNotification(`Ultimate Win!`);
+                showNotification(`Ultimate Win! You now have $${winnings} more!`);
             } else {
                 money -= gambleAmount;
                 showNotification(`You lost! You lost $${gambleAmount}.`);
