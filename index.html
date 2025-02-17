@@ -25,91 +25,77 @@
             border: none;
             border-radius: 5px;
         }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .status {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .upgrade {
+            background-color: #008CBA;
+        }
+        .upgrade:hover {
+            background-color: #007b8e;
+        }
+        .rebirth {
+            background-color: #f39c12;
+        }
+        .rebirth:hover {
+            background-color: #e67e22;
+        }
+        .gamble {
+            background-color: #e74c3c;
+        }
+        .gamble:hover {
+            background-color: #c0392b;
+        }
+        
         .ultimate-gamble {
             background-color: #9b59b6;
         }
         .ultimate-gamble:hover {
             background-color: #8e44ad;
         }
-        .testmode-box {
+        /* Modal Styling */
+        .modal {
             display: none;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            padding: 10px;
-            border: 1px solid black;
-            border-radius: 5px;
-            text-align: left;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Tycoon Game</h1>
-        <p>Money: $<span id="money">0</span></p>
+@@ -108,6 +114,7 @@
+        <button class="button upgrade" id="upgradeButton">Upgrade Business - $50</button>
+        <button class="button rebirth" id="rebirthButton">Rebirth</button>
+        <button class="button gamble" id="gambleButton">Gamble</button>
         <button class="button ultimate-gamble" id="ultimateGambleButton">Ultimate Gamble</button>
     </div>
 
-    <div class="testmode-box" id="testmodeBox">
-        <h3>Test Mode</h3>
-        <p>Money: <input type="number" id="testMoney"></p>
-        <p>Earnings per Click: <input type="number" id="testEarnings"></p>
-        <p>Business Level: <input type="number" id="testBusiness"></p>
-        <p>Rebirths: <input type="number" id="testRebirths"></p>
-        <button onclick="applyTestMode()">Apply</button>
-    </div>
+    <!-- Modal for Pop-up notifications -->
+@@ -231,11 +238,34 @@
+            moneyDisplay.textContent = money;
+        };
 
-    <script>
-        let money = parseInt(localStorage.getItem("money")) || 0;
-        let earningsPerClick = 1;
-        let businessLevel = 1;
-        let rebirths = 0;
-        document.getElementById("money").textContent = money;
-
-        function updateTestModeBox() {
-            document.getElementById("testMoney").value = money;
-            document.getElementById("testEarnings").value = earningsPerClick;
-            document.getElementById("testBusiness").value = businessLevel;
-            document.getElementById("testRebirths").value = rebirths;
-        }
-
-        function applyTestMode() {
-            money = parseInt(document.getElementById("testMoney").value);
-            earningsPerClick = parseInt(document.getElementById("testEarnings").value);
-            businessLevel = parseInt(document.getElementById("testBusiness").value);
-            rebirths = parseInt(document.getElementById("testRebirths").value);
-            document.getElementById("money").textContent = money;
-            localStorage.setItem("money", money);
-        }
-
+        // Ultimate Gambling Feature
         document.getElementById("ultimateGambleButton").onclick = function() {
             let gambleAmount = prompt("How much do you want to gamble for the Ultimate Gamble?");
-            
-            if (gambleAmount === "!testmode") {
-                document.getElementById("testmodeBox").style.display = "block";
-                updateTestModeBox();
-                return;
-            }
-            
             gambleAmount = parseInt(gambleAmount);
             if (isNaN(gambleAmount) || gambleAmount <= 0 || gambleAmount > money) {
-                alert("Invalid gamble amount. You must have enough money to gamble!");
+                showNotification("Invalid gamble amount. You must have enough money to gamble!");
                 return;
             }
-
-            let ultimateGambleOutcome = Math.random() < 0.01;
+            let ultimateGambleOutcome = Math.random() < 0.01; // 1% chance to win 100 times the gamble amount
             if (ultimateGambleOutcome) {
-                let winnings = gambleAmount * 100;
+                let winnings = gambleAmount * 100; // Win 100 times the amount gambled
                 money += winnings;
-                alert(`Ultimate Win! You now have $${winnings} more.`);
+                showNotification(`Ultimate Win! You now have $${winnings} more.`);
             } else {
                 money -= gambleAmount;
-                alert(`You lost! You lost $${gambleAmount}.`);
+                showNotification(`You lost! You lost $${gambleAmount}.`);
             }
-            document.getElementById("money").textContent = money;
-            localStorage.setItem("money", money);
+            moneyDisplay.textContent = money;
         };
+        // Initialize rebirth cost display
+        rebirthCostDisplay.textContent = calculateRebirthCost();
+
+        // Periodically save game state every 30 seconds
+        setInterval(saveData, 30000);  // Save every 30 seconds
     </script>
 </body>
 </html>
