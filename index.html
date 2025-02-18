@@ -35,17 +35,6 @@
         .ultimate-gamble { background-color: #8e44ad; }
         .ultimate-gamble:hover { background-color: #732d91; }
 
-        #testModeBox {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #aaa;
-            background-color: #e8e8e8;
-            width: 80%;
-            margin-left: 10%;
-            text-align: left;
-        }
-
         #scoreboard {
             margin-top: 50px;
         }
@@ -87,16 +76,6 @@
         <button class="button" id="startRunButton">Start New Run</button>
     </div>
 
-    <div id="testModeBox">
-        <h3>Test Mode Activated</h3>
-        <p><strong>Money:</strong> $<span id="testMoney">0</span></p>
-        <p><strong>Money per Click:</strong> $<span id="testEarningsPerClick">1</span></p>
-        <p><strong>Business Level:</strong> <span id="testBusinessLevel">1</span></p>
-        <p><strong>Rebirths:</strong> <span id="testRebirths">0</span></p>
-        <label for="winChanceInput">Set Gamble Win Chance (0-1):</label>
-        <input type="number" id="winChanceInput" min="0" max="1" step="0.01" value="0.5" />
-    </div>
-
     <div id="scoreboard">
         <h3>Scoreboard</h3>
         <table class="scoreboard-table">
@@ -106,24 +85,15 @@
                     <th>Best Time (s)</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="scoreboardBody">
+                <tr><td>Reach $100</td><td id="bestTimeReach100">0</td></tr>
                 <tr><td>Reach $1,000,000</td><td id="bestTimeReach1000000">0</td></tr>
                 <tr><td>Complete 10 Rebirths</td><td id="bestTimeRebirth10">0</td></tr>
                 <tr><td>Upgrade to Business Level 100</td><td id="bestTimeUpgradeLevel100">0</td></tr>
                 <tr><td>Gamble $10,000</td><td id="bestTimeGamble10000">0</td></tr>
                 <tr><td>Complete 1000 Runs</td><td id="bestTimeRuns1000">0</td></tr>
-                <tr><td>Win Lottery 5 Times</td><td id="bestTimeLottery5">0</td></tr>
                 <tr><td>Complete Speedrun in Under 30 Minutes</td><td id="bestTimeSpeedrun30">0</td></tr>
-                <tr><td>Gamble $1,000,000</td><td id="bestTimeGamble1000000">0</td></tr>
-                <tr><td>Have $50,000,000 in Reserve</td><td id="bestTimeReserve50000000">0</td></tr>
-                <tr><td>Unlock All Upgrades</td><td id="bestTimeUnlockUpgrades">0</td></tr>
-                <tr><td>Rebirth 100 Times</td><td id="bestTimeRebirth100">0</td></tr>
-                <tr><td>Beat Ultimate Gamble 10 Times</td><td id="bestTimeUltimateGamble10">0</td></tr>
-                <tr><td>Defeat Boss Fight (Final Gamble)</td><td id="bestTimeFinalGamble">0</td></tr>
-                <tr><td>Complete 100 Speedruns</td><td id="bestTimeSpeedruns100">0</td></tr>
-                <tr><td>Collect 1,000 Rare Items</td><td id="bestTimeRareItems1000">0</td></tr>
-                <tr><td>Achieve All Achievements</td><td id="bestTimeAllAchievements">0</td></tr>
-                <tr><td>Max Out All Stats</td><td id="bestTimeMaxStats">0</td></tr>
+                <tr><td>Complete the Game (Reach $100 Trillion)</td><td id="bestTimeFinishGame">0</td></tr>
             </tbody>
         </table>
     </div>
@@ -138,6 +108,7 @@
         let currentGoal = null;
         let runStartTime = 0;
         let runTime = 0;
+        let timerInterval = null; // Variable to store the interval
 
         const moneyDisplay = document.getElementById("money");
         const earningsPerClickDisplay = document.getElementById("earningsPerClick");
@@ -145,6 +116,8 @@
         const rebirthsDisplay = document.getElementById("rebirths");
         const rebirthCostDisplay = document.getElementById("rebirthCost");
         const speedrunTimerDisplay = document.getElementById("speedrunTimer");
+
+        const FINISH_GOAL = 100000000000000; // $100 trillion
 
         function calculateRebirthCost() {
             return 1000 * Math.pow(3, rebirths);
@@ -172,10 +145,14 @@
             earningsPerClick = 1;
             businessLevel = 1;
             rebirths = 0;
-            currentGoal = 'Reach $1,000,000';
+            currentGoal = 'Reach $100';
             runStartTime = Date.now();
             isRunning = true;
             updateSpeedrunTimer();
+
+            if (timerInterval) clearInterval(timerInterval); // Clear any existing interval
+            timerInterval = setInterval(updateSpeedrunTimer, 1000); // Update every second
+
             saveData();
         }
 
@@ -188,14 +165,40 @@
             }
         }
 
+        function updateScoreboard() {
+            const goals = ['Reach100', 'Reach1000000', 'Rebirth10', 'UpgradeLevel100', 'Gamble10000', 'Runs1000', 'Speedrun30', 'FinishGame'];
+            goals.forEach(goal => {
+                const bestTime = localStorage.getItem(goal) || 0;
+                document.getElementById(`bestTime${goal}`).textContent = bestTime;
+            });
+        }
+
         document.getElementById("clickButton").onclick = function() {
             money += earningsPerClick;
             moneyDisplay.textContent = money;
+
+            if (currentGoal === 'Reach $100' && money >= 100) {
+                savePB('Reach100', runTime);
+                currentGoal = 'Reach $1,000,000';
+                alert("Goal reached: Reach $100");
+            }
 
             if (currentGoal === 'Reach $1,000,000' && money >= 1000000) {
                 savePB('Reach1000000', runTime);
                 currentGoal = 'Complete 10 Rebirths';
                 alert("Goal reached: Reach $1,000,000");
+            }
+
+            // Game completion check at $100 trillion
+            if (money >= FINISH_GOAL) {
+                savePB('FinishGame', runTime);
+                isRunning = false;
+                clearInterval(timerInterval); // Stop the timer
+                alert("Congratulations! You have completed the game and finished the run!");
+                let minutes = Math.floor(runTime / 60);
+                let seconds = runTime % 60;
+                alert(`Your final time: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
+                saveData();
             }
         };
 
@@ -242,14 +245,14 @@
                 moneyDisplay.textContent = money;
                 saveData();
             } else {
-                alert("You need at least $1000 to gamble.");
+                alert("You need $1000 to gamble!");
             }
         };
 
         document.getElementById("ultimateGambleButton").onclick = function() {
             if (money >= 10000) {
                 money -= 10000;
-                if (Math.random() < 0.2) {
+                if (Math.random() < 0.25) {
                     money += 50000;
                     alert("You won the Ultimate Gamble!");
                 } else {
@@ -258,13 +261,20 @@
                 moneyDisplay.textContent = money;
                 saveData();
             } else {
-                alert("You need at least $10,000 to participate in the Ultimate Gamble.");
+                alert("You need $10,000 to play the Ultimate Gamble!");
             }
         };
 
-        document.getElementById("startRunButton").onclick = startNewRun;
+        document.getElementById("startRunButton").onclick = function() {
+            startNewRun();
+        };
 
-        setInterval(updateSpeedrunTimer, 1000);
+        window.onload = function() {
+            updateScoreboard();
+            if (money > 0) {
+                startNewRun();
+            }
+        };
     </script>
 </body>
 </html>
