@@ -25,79 +25,246 @@
             border: none;
             border-radius: 5px;
         }
-        .button:hover {
-            background-color: #45a049;
-        }
-        .status {
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        .upgrade {
-            background-color: #008CBA;
-        }
-        .upgrade:hover {
-            background-color: #007b8e;
-        }
-        .rebirth {
-            background-color: #f39c12;
-        }
-        .rebirth:hover {
-            background-color: #e67e22;
-        }
-        .gamble {
-            background-color: #e74c3c;
-        }
-        .gamble:hover {
-            background-color: #c0392b;
-        }
-        
-        .ultimate-gamble {
-            background-color: #9b59b6;
-        }
-        .ultimate-gamble:hover {
-            background-color: #8e44ad;
-        }
-        /* Modal Styling */
-        .modal {
+        .button:hover { background-color: #45a049; }
+        .upgrade { background-color: #008CBA; }
+        .upgrade:hover { background-color: #007b8e; }
+        .rebirth { background-color: #f39c12; }
+        .rebirth:hover { background-color: #e67e22; }
+        .gamble { background-color: #e74c3c; }
+        .gamble:hover { background-color: #c0392b; }
+        .ultimate-gamble { background-color: #8e44ad; }
+        .ultimate-gamble:hover { background-color: #732d91; }
+
+        #testModeBox {
             display: none;
-@@ -108,6 +114,7 @@
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #aaa;
+            background-color: #e8e8e8;
+            width: 80%;
+            margin-left: 10%;
+            text-align: left;
+        }
+
+        #scoreboard {
+            margin-top: 50px;
+        }
+
+        .scoreboard-table {
+            margin: 20px;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+
+        .scoreboard-table, .scoreboard-table th, .scoreboard-table td {
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .scoreboard-table th, .scoreboard-table td {
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tycoon Game - Hardcore Edition</h1>
+        <div class="status">
+            <p>Money: $<span id="money">0</span></p>
+            <p>Business Level: <span id="businessLevel">1</span></p>
+            <p>Money per Click: $<span id="earningsPerClick">1</span></p>
+            <p>Rebirths: <span id="rebirths">0</span></p>
+            <p>Next Rebirth Cost: $<span id="rebirthCost">1000</span></p>
+            <p>Speedrun Timer: <span id="speedrunTimer">00:00</span></p>
+        </div>
+        <button class="button" id="clickButton">Earn Money</button>
         <button class="button upgrade" id="upgradeButton">Upgrade Business - $50</button>
         <button class="button rebirth" id="rebirthButton">Rebirth</button>
         <button class="button gamble" id="gambleButton">Gamble</button>
         <button class="button ultimate-gamble" id="ultimateGambleButton">Ultimate Gamble</button>
+        <button class="button" id="startRunButton">Start New Run</button>
     </div>
 
-    <!-- Modal for Pop-up notifications -->
-@@ -231,11 +238,34 @@
+    <div id="testModeBox">
+        <h3>Test Mode Activated</h3>
+        <p><strong>Money:</strong> $<span id="testMoney">0</span></p>
+        <p><strong>Money per Click:</strong> $<span id="testEarningsPerClick">1</span></p>
+        <p><strong>Business Level:</strong> <span id="testBusinessLevel">1</span></p>
+        <p><strong>Rebirths:</strong> <span id="testRebirths">0</span></p>
+        <label for="winChanceInput">Set Gamble Win Chance (0-1):</label>
+        <input type="number" id="winChanceInput" min="0" max="1" step="0.01" value="0.5" />
+    </div>
+
+    <div id="scoreboard">
+        <h3>Scoreboard</h3>
+        <table class="scoreboard-table">
+            <thead>
+                <tr>
+                    <th>Goal</th>
+                    <th>Best Time (s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Reach $1,000,000</td><td id="bestTimeReach1000000">0</td></tr>
+                <tr><td>Complete 10 Rebirths</td><td id="bestTimeRebirth10">0</td></tr>
+                <tr><td>Upgrade to Business Level 100</td><td id="bestTimeUpgradeLevel100">0</td></tr>
+                <tr><td>Gamble $10,000</td><td id="bestTimeGamble10000">0</td></tr>
+                <tr><td>Complete 1000 Runs</td><td id="bestTimeRuns1000">0</td></tr>
+                <tr><td>Win Lottery 5 Times</td><td id="bestTimeLottery5">0</td></tr>
+                <tr><td>Complete Speedrun in Under 30 Minutes</td><td id="bestTimeSpeedrun30">0</td></tr>
+                <tr><td>Gamble $1,000,000</td><td id="bestTimeGamble1000000">0</td></tr>
+                <tr><td>Have $50,000,000 in Reserve</td><td id="bestTimeReserve50000000">0</td></tr>
+                <tr><td>Unlock All Upgrades</td><td id="bestTimeUnlockUpgrades">0</td></tr>
+                <tr><td>Rebirth 100 Times</td><td id="bestTimeRebirth100">0</td></tr>
+                <tr><td>Beat Ultimate Gamble 10 Times</td><td id="bestTimeUltimateGamble10">0</td></tr>
+                <tr><td>Defeat Boss Fight (Final Gamble)</td><td id="bestTimeFinalGamble">0</td></tr>
+                <tr><td>Complete 100 Speedruns</td><td id="bestTimeSpeedruns100">0</td></tr>
+                <tr><td>Collect 1,000 Rare Items</td><td id="bestTimeRareItems1000">0</td></tr>
+                <tr><td>Achieve All Achievements</td><td id="bestTimeAllAchievements">0</td></tr>
+                <tr><td>Max Out All Stats</td><td id="bestTimeMaxStats">0</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let money = parseInt(localStorage.getItem("money")) || 0;
+        let earningsPerClick = parseInt(localStorage.getItem("earningsPerClick")) || 1;
+        let businessLevel = parseInt(localStorage.getItem("businessLevel")) || 1;
+        let rebirths = parseInt(localStorage.getItem("rebirths")) || 0;
+        let timerStart = null;
+        let isRunning = false;
+        let currentGoal = null;
+        let runStartTime = 0;
+        let runTime = 0;
+
+        const moneyDisplay = document.getElementById("money");
+        const earningsPerClickDisplay = document.getElementById("earningsPerClick");
+        const businessLevelDisplay = document.getElementById("businessLevel");
+        const rebirthsDisplay = document.getElementById("rebirths");
+        const rebirthCostDisplay = document.getElementById("rebirthCost");
+        const speedrunTimerDisplay = document.getElementById("speedrunTimer");
+
+        function calculateRebirthCost() {
+            return 1000 * Math.pow(3, rebirths);
+        }
+
+        function updateSpeedrunTimer() {
+            if (isRunning) {
+                runTime = Math.floor((Date.now() - runStartTime) / 1000);
+                let minutes = Math.floor(runTime / 60);
+                let seconds = runTime % 60;
+                speedrunTimerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+        }
+
+        function savePB(goal, time) {
+            const bestTime = localStorage.getItem(goal) || Infinity;
+            if (time < bestTime) {
+                localStorage.setItem(goal, time);
+                document.getElementById(`bestTime${goal}`).textContent = time;
+            }
+        }
+
+        function startNewRun() {
+            money = 0;
+            earningsPerClick = 1;
+            businessLevel = 1;
+            rebirths = 0;
+            currentGoal = 'Reach $1,000,000';
+            runStartTime = Date.now();
+            isRunning = true;
+            updateSpeedrunTimer();
+            saveData();
+        }
+
+        function saveData() {
+            if (!isRunning) {
+                localStorage.setItem("money", money);
+                localStorage.setItem("earningsPerClick", earningsPerClick);
+                localStorage.setItem("businessLevel", businessLevel);
+                localStorage.setItem("rebirths", rebirths);
+            }
+        }
+
+        document.getElementById("clickButton").onclick = function() {
+            money += earningsPerClick;
             moneyDisplay.textContent = money;
+
+            if (currentGoal === 'Reach $1,000,000' && money >= 1000000) {
+                savePB('Reach1000000', runTime);
+                currentGoal = 'Complete 10 Rebirths';
+                alert("Goal reached: Reach $1,000,000");
+            }
         };
 
-        // Ultimate Gambling Feature
-        document.getElementById("ultimateGambleButton").onclick = function() {
-            let gambleAmount = prompt("How much do you want to gamble for the Ultimate Gamble?");
-            gambleAmount = parseInt(gambleAmount);
-            if (isNaN(gambleAmount) || gambleAmount <= 0 || gambleAmount > money) {
-                showNotification("Invalid gamble amount. You must have enough money to gamble!");
-                return;
-            }
-
-            let ultimateGambleOutcome = Math.random() < 0.001; // 0.1% chance to win 1000 times the gamble amount
-            if (ultimateGambleOutcome) {
-                let winnings = gambleAmount * 1000; // Win 1000 times the amount gambled
-                money += winnings;
-                showNotification(`Ultimate Win!`);
-                showNotification(`Ultimate Win! You now have $${winnings} more!`);
+        document.getElementById("upgradeButton").onclick = function() {
+            if (money >= 50) {
+                money -= 50;
+                earningsPerClick += 1;
+                businessLevel += 1;
+                moneyDisplay.textContent = money;
+                earningsPerClickDisplay.textContent = earningsPerClick;
+                businessLevelDisplay.textContent = businessLevel;
+                saveData();
             } else {
-                money -= gambleAmount;
-                showNotification(`You lost! You lost $${gambleAmount}.`);
+                alert("You need $50 to upgrade your business!");
             }
-            moneyDisplay.textContent = money;
         };
-        // Initialize rebirth cost display
-        rebirthCostDisplay.textContent = calculateRebirthCost();
 
-        // Periodically save game state every 30 seconds
-        setInterval(saveData, 30000);  // Save every 30 seconds
+        document.getElementById("rebirthButton").onclick = function() {
+            const rebirthCost = calculateRebirthCost();
+            if (money >= rebirthCost) {
+                money = 0;
+                earningsPerClick = 3 + (rebirths * 3);
+                businessLevel = 1;
+                rebirths += 1;
+                moneyDisplay.textContent = money;
+                earningsPerClickDisplay.textContent = earningsPerClick;
+                rebirthsDisplay.textContent = rebirths;
+                rebirthCostDisplay.textContent = calculateRebirthCost();
+                saveData();
+            } else {
+                alert("You don't have enough money for a rebirth.");
+            }
+        };
+
+        document.getElementById("gambleButton").onclick = function() {
+            if (money >= 1000) {
+                money -= 1000;
+                if (Math.random() < 0.5) {
+                    money += 2000;
+                    alert("You won the gamble!");
+                } else {
+                    alert("You lost the gamble!");
+                }
+                moneyDisplay.textContent = money;
+                saveData();
+            } else {
+                alert("You need at least $1000 to gamble.");
+            }
+        };
+
+        document.getElementById("ultimateGambleButton").onclick = function() {
+            if (money >= 10000) {
+                money -= 10000;
+                if (Math.random() < 0.2) {
+                    money += 50000;
+                    alert("You won the Ultimate Gamble!");
+                } else {
+                    alert("You lost the Ultimate Gamble!");
+                }
+                moneyDisplay.textContent = money;
+                saveData();
+            } else {
+                alert("You need at least $10,000 to participate in the Ultimate Gamble.");
+            }
+        };
+
+        document.getElementById("startRunButton").onclick = startNewRun;
+
+        setInterval(updateSpeedrunTimer, 1000);
     </script>
 </body>
 </html>
