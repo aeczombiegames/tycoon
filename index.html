@@ -3,74 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tycoon Game</title>
+    <title>Tycoon Game - Hardcore Edition</title>
     <style>
+        /* General styling */
         body {
             font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
         }
         .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-            padding-top: 50px;
+            width: 300px;
         }
         .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 32px;
-            font-size: 18px;
-            margin: 10px;
-            cursor: pointer;
+            padding: 10px 20px;
+            margin: 10px 0;
             border: none;
             border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
         }
-        .button:hover { background-color: #45a049; }
-        .upgrade { background-color: #008CBA; }
-        .upgrade:hover { background-color: #007b8e; }
-        .rebirth { background-color: #f39c12; }
-        .rebirth:hover { background-color: #e67e22; }
-        .gamble { background-color: #e74c3c; }
-        .gamble:hover { background-color: #c0392b; }
-        .ultimate-gamble { background-color: #8e44ad; }
-        .ultimate-gamble:hover { background-color: #732d91; }
-
-        #testModeBox {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #aaa;
-            background-color: #e8e8e8;
-            width: 80%;
-            margin-left: 10%;
-            text-align: left;
+        .button:hover {
+            background-color: #0056b3;
         }
-
-        #scoreboard {
-            margin-top: 50px;
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            margin-bottom: 20px;
         }
-
+        .progress-bar-filled {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0;
+        }
         .scoreboard-table {
-            margin: 20px;
-            width: 60%;
-            margin-left: auto;
-            margin-right: auto;
+            width: 100%;
+            margin-top: 20px;
             border-collapse: collapse;
         }
-
-        .scoreboard-table, .scoreboard-table th, .scoreboard-table td {
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
         .scoreboard-table th, .scoreboard-table td {
+            border: 1px solid #ddd;
             padding: 8px;
+            text-align: left;
+        }
+        .scoreboard-table th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Tycoon Game - Hardcore Edition</h1>
+        <div class="progress-bar">
+            <div id="progressBarFilled" class="progress-bar-filled"></div>
+        </div>
         <div class="status">
             <p>Money: $<span id="money">0</span></p>
             <p>Business Level: <span id="businessLevel">1</span></p>
@@ -99,34 +98,28 @@
 
     <div id="scoreboard">
         <h3>Scoreboard</h3>
-        <table class="scoreboard-table">
+        <table class="scoreboard-table" id="scoreboardTable">
             <thead>
                 <tr>
                     <th>Goal</th>
-                    <th>Best Time (s)</th>
+                    <th>Personal Best</th>
                 </tr>
             </thead>
             <tbody>
-                <tr><td>Reach $1,000,000</td><td id="bestTimeReach1000000">0</td></tr>
-                <tr><td>Complete 10 Rebirths</td><td id="bestTimeRebirth10">0</td></tr>
-                <tr><td>Upgrade to Business Level 100</td><td id="bestTimeUpgradeLevel100">0</td></tr>
-                <tr><td>Gamble $10,000</td><td id="bestTimeGamble10000">0</td></tr>
-                <tr><td>Complete 1000 Runs</td><td id="bestTimeRuns1000">0</td></tr>
-                <tr><td>Win Lottery 5 Times</td><td id="bestTimeLottery5">0</td></tr>
-                <tr><td>Complete Speedrun in Under 30 Minutes</td><td id="bestTimeSpeedrun30">0</td></tr>
-                <tr><td>Gamble $1,000,000</td><td id="bestTimeGamble1000000">0</td></tr>
-                <tr><td>Have $50,000,000 in Reserve</td><td id="bestTimeReserve50000000">0</td></tr>
-                <tr><td>Unlock All Upgrades</td><td id="bestTimeUnlockUpgrades">0</td></tr>
-                <tr><td>Rebirth 100 Times</td><td id="bestTimeRebirth100">0</td></tr>
-                <tr><td>Beat Ultimate Gamble 10 Times</td><td id="bestTimeUltimateGamble10">0</td></tr>
-                <tr><td>Defeat Boss Fight (Final Gamble)</td><td id="bestTimeFinalGamble">0</td></tr>
-                <tr><td>Complete 100 Speedruns</td><td id="bestTimeSpeedruns100">0</td></tr>
-                <tr><td>Collect 1,000 Rare Items</td><td id="bestTimeRareItems1000">0</td></tr>
-                <tr><td>Achieve All Achievements</td><td id="bestTimeAllAchievements">0</td></tr>
-                <tr><td>Max Out All Stats</td><td id="bestTimeMaxStats">0</td></tr>
+                <tr>
+                    <td>Reach $1,000,000</td>
+                    <td id="goal1PB">Not achieved</td>
+                </tr>
+                <tr>
+                    <td>Rebirth 10 times</td>
+                    <td id="goal2PB">Not achieved</td>
+                </tr>
+                <!-- Add more goals as needed -->
             </tbody>
         </table>
     </div>
+
+    <button id="resetButton">Reset Everything</button>
 
     <script>
         let money = parseInt(localStorage.getItem("money")) || 0;
@@ -135,9 +128,13 @@
         let rebirths = parseInt(localStorage.getItem("rebirths")) || 0;
         let timerStart = null;
         let isRunning = false;
-        let currentGoal = null;
         let runStartTime = 0;
         let runTime = 0;
+        let totalProgress = 0; // Total progress for 100%
+
+        // Scoreboard
+        const goal1PB = document.getElementById("goal1PB");
+        const goal2PB = document.getElementById("goal2PB");
 
         const moneyDisplay = document.getElementById("money");
         const earningsPerClickDisplay = document.getElementById("earningsPerClick");
@@ -145,9 +142,14 @@
         const rebirthsDisplay = document.getElementById("rebirths");
         const rebirthCostDisplay = document.getElementById("rebirthCost");
         const speedrunTimerDisplay = document.getElementById("speedrunTimer");
+        const progressBarFilled = document.getElementById("progressBarFilled");
 
+        const MONEY_CAP = 100000000000000; // 100 trillion
+
+        // Function to calculate rebirth cost based on rebirth count, but without a cap
         function calculateRebirthCost() {
-            return 1000 * Math.pow(3, rebirths);
+            let cost = 1000 * Math.pow(2, rebirths);  // Example: Rebirth cost grows exponentially
+            return cost;  // No cap on rebirth cost
         }
 
         function updateSpeedrunTimer() {
@@ -159,23 +161,16 @@
             }
         }
 
-        function savePB(goal, time) {
-            const bestTime = localStorage.getItem(goal) || Infinity;
-            if (time < bestTime) {
-                localStorage.setItem(goal, time);
-                document.getElementById(`bestTime${goal}`).textContent = time;
-            }
-        }
-
         function startNewRun() {
             money = 0;
             earningsPerClick = 1;
             businessLevel = 1;
             rebirths = 0;
-            currentGoal = 'Reach $1,000,000';
+            totalProgress = 0; // Reset total progress
             runStartTime = Date.now();
             isRunning = true;
             updateSpeedrunTimer();
+            updateProgressBar();
             saveData();
         }
 
@@ -188,40 +183,70 @@
             }
         }
 
+        function updateProgressBar() {
+            const progressPercentage = totalProgress; // This value should be updated as progress is made
+            progressBarFilled.style.width = `${progressPercentage}%`;
+        }
+
+        function resetEverything() {
+            localStorage.clear();
+            money = 0;
+            earningsPerClick = 1;
+            businessLevel = 1;
+            rebirths = 0;
+            totalProgress = 0;
+            speedrunTimerDisplay.textContent = "00:00";
+            moneyDisplay.textContent = money;
+            earningsPerClickDisplay.textContent = earningsPerClick;
+            businessLevelDisplay.textContent = businessLevel;
+            rebirthsDisplay.textContent = rebirths;
+            rebirthCostDisplay.textContent = calculateRebirthCost();
+            updateProgressBar();
+        }
+
+        function updateScoreboard() {
+            if (money >= 1000000) {
+                goal1PB.textContent = `$${money}`;
+            }
+            if (rebirths >= 10) {
+                goal2PB.textContent = `${rebirths} rebirths`;
+            }
+        }
+
         document.getElementById("clickButton").onclick = function() {
             money += earningsPerClick;
+            if (money > MONEY_CAP) {
+                money = MONEY_CAP;  // Cap the money at 100 trillion
+            }
             moneyDisplay.textContent = money;
 
-            if (currentGoal === 'Reach $1,000,000' && money >= 1000000) {
-                savePB('Reach1000000', runTime);
-                currentGoal = 'Complete 10 Rebirths';
-                alert("Goal reached: Reach $1,000,000");
-            }
+            // Updating progress towards 100%
+            totalProgress = Math.min(100, (money / 1000000) * 100);  // Example progress for $1,000,000 goal
+            updateProgressBar();
+            updateScoreboard();
         };
 
         document.getElementById("upgradeButton").onclick = function() {
             if (money >= 50) {
                 money -= 50;
-                earningsPerClick += 1;
+                earningsPerClick += 5;
                 businessLevel += 1;
                 moneyDisplay.textContent = money;
                 earningsPerClickDisplay.textContent = earningsPerClick;
                 businessLevelDisplay.textContent = businessLevel;
                 saveData();
             } else {
-                alert("You need $50 to upgrade your business!");
+                alert("Not enough money for upgrade!");
             }
         };
 
         document.getElementById("rebirthButton").onclick = function() {
             const rebirthCost = calculateRebirthCost();
             if (money >= rebirthCost) {
-                money = 0;
-                earningsPerClick = 3 + (rebirths * 3);
-                businessLevel = 1;
-                rebirths += 1;
+                money -= rebirthCost;
+                rebirths++;
+                money += 1000 * rebirths;  // Rebirth reward
                 moneyDisplay.textContent = money;
-                earningsPerClickDisplay.textContent = earningsPerClick;
                 rebirthsDisplay.textContent = rebirths;
                 rebirthCostDisplay.textContent = calculateRebirthCost();
                 saveData();
@@ -231,18 +256,24 @@
         };
 
         document.getElementById("gambleButton").onclick = function() {
-            if (money >= 1000) {
-                money -= 1000;
+            if (money >= 100) {
+                const gamblePercentage = Math.random() * (0.5 - 0.1) + 0.1; // Random percentage between 10% and 50%
+                const gambleAmount = money * gamblePercentage;
+                money -= gambleAmount;
+
                 if (Math.random() < 0.5) {
-                    money += 2000;
-                    alert("You won the gamble!");
+                    money += gambleAmount * 2;
+                    if (money > MONEY_CAP) {
+                        money = MONEY_CAP;  // Cap the money at 100 trillion
+                    }
+                    alert(`You won the gamble! You now have $${money}`);
                 } else {
-                    alert("You lost the gamble!");
+                    alert(`You lost the gamble! You now have $${money}`);
                 }
                 moneyDisplay.textContent = money;
                 saveData();
             } else {
-                alert("You need at least $1000 to gamble.");
+                alert("You need at least $100 to gamble.");
             }
         };
 
@@ -251,6 +282,9 @@
                 money -= 10000;
                 if (Math.random() < 0.2) {
                     money += 50000;
+                    if (money > MONEY_CAP) {
+                        money = MONEY_CAP;  // Cap the money at 100 trillion
+                    }
                     alert("You won the Ultimate Gamble!");
                 } else {
                     alert("You lost the Ultimate Gamble!");
@@ -263,8 +297,7 @@
         };
 
         document.getElementById("startRunButton").onclick = startNewRun;
-
-        setInterval(updateSpeedrunTimer, 1000);
+        document.getElementById("resetButton").onclick = resetEverything;
     </script>
 </body>
 </html>
