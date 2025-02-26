@@ -237,7 +237,7 @@
         document.getElementById("gambleButton").onclick = function() {
             if (money >= 10000) {
                 money -= 10000;
-                if (Math.random() < 0.1) { // 10% chance to win
+                if (Math.random() < 0.3) { // 30% chance to win
                     money += 30000;
                     alert("You won the gamble!");
                 } else {
